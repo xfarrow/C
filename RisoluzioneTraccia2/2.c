@@ -20,13 +20,13 @@ struct compressedLocationStruct{
 };
 
 struct filiale* leggiFile(FILE*);						// read from file												
-void stampaLista(struct filiale* head);					// print on screen what has been read
-struct filiale* eliminaAziende(struct filiale* head);	// delete agencies whose have less than two locations
-void comprimi(struct filiale* head);					// store location data in a compressed way
+void stampaLista(struct filiale*);						// print on screen what has been read
+struct filiale* eliminaAziende(struct filiale*);		// delete agencies whose have less than two locations
+void comprimi(struct filiale*);							// store location data in a compressed way
 int giaControllata(struct filiale*, char*, int);		// check if I am reading the same location again. for internal use only
-void stampaCompressed(struct filiale* head);			// print on screen the compressed way
-int contaOccorrenze(struct filiale* head, char* cityName, int numberOfCities);	// count how many locations are in the same city for a given agency
-void stampaSuFile(struct filiale* head, FILE* fp); 		// print on file
+void stampaCompressed(struct filiale*);					// print on screen the compressed way
+int contaOccorrenze(struct filiale*, char*, int);		// count how many locations are in the same city for a given agency
+void stampaSuFile(struct filiale*, FILE*); 				// print on file
 
 int main(void){
 	struct filiale* head = NULL;
@@ -147,8 +147,9 @@ struct filiale* eliminaAziende(struct filiale* head){
 
 /*
 ** This function will delete the array containing city names and will
-** store the same information in a linked list which contains the city name
-** and how many agencies ("filiali") there are in that city.
+** store the same information in a linked list which each node contains
+** the city name and how many agencies ("filiali") there are in that city
+** for a given company name.
 */
 void comprimi(struct filiale* head){
 	int numeroFilialiInCittaTmp, i;
@@ -212,10 +213,6 @@ void stampaCompressed(struct filiale* head){
 
 void stampaSuFile(struct filiale* head, FILE* fp){
 	struct compressedLocationStruct* tmpCompressed = NULL;
-	if(head == NULL){
-	    fprintf(fp, "%s", "No input file found. Aborted.\n");
-		return;
-	}
 	while(head != NULL){
 		fprintf(fp, "%s %d", head->nome , head->num_filiali);
 		tmpCompressed = head->compressedLocations;
